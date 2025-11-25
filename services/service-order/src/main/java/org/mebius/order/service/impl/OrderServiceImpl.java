@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mebius.bean.order.Order;
 import org.mebius.bean.product.Product;
 import org.mebius.order.config.OrderConfig;
+import org.mebius.order.feign.ProductFeign;
 import org.mebius.order.properties.OrderProperties;
 import org.mebius.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,13 @@ public class OrderServiceImpl implements OrderService {
     private LoadBalancerClient loadBalancerClient;
     @Autowired
     private OrderProperties orderProperties;
+    @Autowired
+    private ProductFeign productFeign;
+
     @Override
     public Order createOrder(Long userId, Long productId) {
-        Product product = getProductFromRemote(productId);
+//        Product product = getProductFromRemote(productId);
+        Product product = productFeign.getProduct(productId);
         BigDecimal price = product.getPrice();
         int num = product.getNum();
         Order order = new Order();

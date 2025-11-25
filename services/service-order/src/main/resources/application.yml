@@ -3,10 +3,17 @@ server:
 spring:
   profiles:
     active: @profile.active@
+    include: feign
   application:
     name: service-order
   cloud:
     nacos:
+#      discovery:
+        #注册到指定的命名空间 默认是注册到public
+#        namespace: @profile.active@
+        #修改服务注册到nacos上分组名称，默认是DEFAULT_GROUP
+#        group: order
+
       server-addr: 127.0.0.1:8848
       config:
         import-check:

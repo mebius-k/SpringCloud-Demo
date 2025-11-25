@@ -7,6 +7,7 @@ import com.mebius.product.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -19,6 +20,14 @@ public class ProductServiceImpl implements ProductService {
         product.setProductName("苹果-"+productId);
         product.setNum(2);
         log.info(product.toString());
+
+//        try {
+//            TimeUnit.SECONDS.sleep(61);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
         return product;
     }
 }

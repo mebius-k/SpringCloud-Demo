@@ -2,11 +2,18 @@ server:
   port: 8000
 spring:
   profiles:
-    active: prod
+    active: dev
+    include: feign
   application:
     name: service-order
   cloud:
     nacos:
+#      discovery:
+        #注册到指定的命名空间 默认是注册到public
+#        namespace: dev
+        #修改服务注册到nacos上分组名称，默认是DEFAULT_GROUP
+#        group: order
+
       server-addr: 127.0.0.1:8848
       config:
         import-check:
@@ -36,7 +43,7 @@ spring:
 spring:
   config:
     import:
-      - nacos:service-order.properties?group=DEFAULT_GROUP
+      - nacos:common.properties?group=order
       - nacos:database.properties?group=order
       - nacos:hehe.properties?group=order
     activate:
