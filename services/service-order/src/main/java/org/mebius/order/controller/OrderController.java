@@ -1,5 +1,6 @@
 package org.mebius.order.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import org.mebius.bean.order.Order;
 import org.mebius.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;

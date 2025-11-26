@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductFeign productFeign;
 
+    @SentinelResource(value = "createOrder")
     @Override
     public Order createOrder(Long userId, Long productId) {
 //        Product product = getProductFromRemote(productId);

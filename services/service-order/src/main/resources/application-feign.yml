@@ -5,14 +5,23 @@ spring:
         config:
           default:
             logger-level: full
-            connect-timeout: 1000
+            connect-timeout: 100000
             read-timeout: 2000
           service-product:
             logger-level: full
-            connect-timeout: 3000
+            connect-timeout: 100000
             read-timeout: 5000
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
 
 #\u8BBE\u7F6EopenFeign\u65E5\u5FD7
 logging:
   level:
     org.mebius.order.feign: debug
+#\u515C\u5E95\u56DE\u8C03
+feign:
+  sentinel:
+    enabled: true
+
