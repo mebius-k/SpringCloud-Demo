@@ -1,4 +1,5 @@
 package org.mebius.order.service.impl;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 //@RefreshScope//自动刷新
 @Slf4j
@@ -39,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductFeign productFeign;
 
-    @SentinelResource(value = "createOrder")
+    @SentinelResource(value = "createOrder",blockHandler = "createOrderBlockHandler")
     @Override
     public Order createOrder(Long userId, Long productId) {
 //        Product product = getProductFromRemote(productId);
@@ -56,6 +58,19 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    /**
+     * blockHandler兜底回调
+     */
+    private Order createOrderBlockHandler(Long userId, Long productId,BlockException e ){
+        Order order = new Order();
+        order.setId(userId);
+        order.setTotalAmount(new BigDecimal("0"));
+        order.setUserId(0L);
+        order.setNickName("blockHandler兜底回调"+e.getClass());
+        order.setAddress("");
+        return order;
+    }
+
    @Value("${spring.profiles.active}")
    private String activeProfile;
 
@@ -64,6 +79,24 @@ public class OrderServiceImpl implements OrderService {
         System.out.println("orderTimeOut: "+orderProperties.getTimeOut()+" orderAutoConfig:"+orderProperties.getAutoConfig());
         return "orderTimeOut: "+orderProperties.getTimeOut()+" orderAutoConfig:"+orderProperties.getAutoConfig()+" activeProfile:"+activeProfile;
 
+    }
+
+    @SentinelResource(value = "secKill-order",fallback = "secKillFallback")
+    @Override
+    public Order secKill(Long userId, Long productId) {
+        Order order = this.createOrder(userId, productId);
+        order.setId(Long.MAX_VALUE);
+        return order;
+    }
+    public Order secKillFallback(Long userId, Long productId) {
+        System.out.println("secKillFallback======================");
+        Order order = new Order();
+        order.setId(productId);
+        order.setTotalAmount(new BigDecimal("0"));
+        order.setUserId(userId);
+        order.setNickName("secKillFallback======================");
+        order.setAddress("secKillFallback======================");
+        return order;
     }
 
     //远程调用获取商品信息

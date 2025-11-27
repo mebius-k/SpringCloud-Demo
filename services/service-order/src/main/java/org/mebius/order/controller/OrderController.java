@@ -23,4 +23,11 @@ public class OrderController {
     public String getConfig() {
        return orderService.getConfig();
     }
+
+
+    @GetMapping("/secKill")
+    public Order secKill(@RequestParam(value = "userId",required = false) Long userId, @RequestParam Long productId) {
+        return orderService.secKill(userId,productId);
+    }
+
 }

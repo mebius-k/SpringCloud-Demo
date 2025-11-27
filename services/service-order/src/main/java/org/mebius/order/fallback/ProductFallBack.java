@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ProductFallBack implements ProductFeign {
     @Override
     public Product getProduct(Long productId) {
-        System.out.println("兜底回调==============");
+        System.out.println("openfeign 兜底回调==============");
         Product product = new Product();
         product.setId(productId);
         product.setPrice(new BigDecimal("0"));
